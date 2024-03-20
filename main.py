@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from atome import Atome
 from molecule import Molecule
-import csv, re, time, json
+import csv, re
 
 def chager_tableau_periodique(nom_fichier):
+    '''Charge le fichier contenant le tableau périodique'''
     with open(nom_fichier, newline='') as csvfile:
         lecteur = csv.reader(csvfile)
         next(lecteur)  # Sauter la ligne d'en-tête
@@ -11,6 +11,7 @@ def chager_tableau_periodique(nom_fichier):
     return atomes
 
 def charger_molecules(tableau_periodique, nom_fichier):
+    '''Charge le fichier contenant les formules chimiques des molécules'''
     with open(nom_fichier, newline='') as csvfile:
         lecteur = csv.reader(csvfile)
         next(lecteur)  # Sauter la ligne d'en-tête
@@ -20,6 +21,10 @@ def charger_molecules(tableau_periodique, nom_fichier):
     return molecules
 
 def string_to_molecule(tableau_periodique, formule):
+    '''
+    Transforme une string en molécule
+    Lance une exception si la formule ne représente pas une molécule
+    '''
     pile = []
     pile.append(Molecule())
 
@@ -45,6 +50,10 @@ def string_to_molecule(tableau_periodique, formule):
     return pile.pop()
     
 def batir_molecule(tableau_periodique, entree):
+    '''
+    Bâtit une molécule représentée par le texte entree. 
+    Si l'entrée ne représente pas une molécule, la fonction retourne None.
+    '''
     try:
         return string_to_molecule(tableau_periodique, entree)
     except Exception as e:
@@ -52,6 +61,7 @@ def batir_molecule(tableau_periodique, entree):
         return None
         
 def menu():
+    '''Affiche le menu et lit le choix de l'utilisateur'''
     debut = 1
     fin = 6
     choix = 6
@@ -94,17 +104,20 @@ def choix_liste_avec_nom(collection, description = ''):
     return collection[choix]
     
 def imprimer_masse_molecule(molecules):
+    '''Imprime la masse d'une molécule choisie par l'utilisateur'''
     print(str(choix_liste_avec_nom(molecules, 'de la molécule').obtenir_masse()) + 'u')
 
 def imprimer_molecule(molecules):
+    '''Imprime la description d'une molécule choisie par l'utilisateur'''
     m = choix_liste_avec_nom(molecules, 'de la molécule')
-    print(m)
     print(m.dict())
 
 def imprimer_atomes(tableau_periodique):
+    '''Imprime la liste des atomes'''
     print('\n'.join([str(a) for a in tableau_periodique.values()]))
 
 def ajouter_molecule(molecules, tableau_periodique, nom_fichier):
+    '''Ajoute une molécule choisie par l'utilisateur à la liste de molécule et au fichier'''
     print("Entrez la formule d'une molécule")
     molecule = batir_molecule(tableau_periodique, input())
     if molecule is not None:
@@ -114,6 +127,7 @@ def ajouter_molecule(molecules, tableau_periodique, nom_fichier):
     return molecules
 
 def labo3():
+    '''Point d'entrée du laboratoire 3'''
     fichier_atomes ='particules/tableau_periodique.csv'
     fichier_molecules = 'particules/molecules.csv'
     tableau_periodique = chager_tableau_periodique(fichier_atomes)
