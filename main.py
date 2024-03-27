@@ -123,7 +123,7 @@ def ajouter_molecule(molecules, tableau_periodique, nom_fichier):
     if molecule is not None:
         molecules.append(molecule)
         with open(nom_fichier, 'a') as f:
-            f.write(str(molecule))
+            f.write(str(molecule) + '\n')
     return molecules
 
 def labo3():
